@@ -20,7 +20,9 @@ const (
 )
 
 var (
-	soaStruct soa
+	soaStruct   soa
+	soaErrEmpty = errors.New("empty Soa configuration")
+	soaLoaded   = false
 )
 
 type soa struct {
@@ -51,11 +53,13 @@ func (s service) IsHttp() bool {
 	return s.domain[0:5] == "http:"
 }
 
-func init() {
+func soaLoad() {
+	soaLoaded = true
+
 	buffer, err := cfg(filepath.Join(DirProjectConfig, soaFile), soaRegexp)
 
 	if err != nil {
-		return
+		panic(soaErrEmpty)
 	}
 
 	soaStruct = soa{
@@ -73,13 +77,16 @@ func init() {
 			token:  string(buffer["sm_token"]),
 		},
 	}
+
+	if (soa{}) == soaStruct {
+		panic(soaErrEmpty)
+	}
 }
 
 // Expose Soa configuration.
 func SoaConfiguration() *soa {
-	if (soa{}) == soaStruct {
-		err := errors.New("empty Soa configuration")
-		panic(err)
+	if !soaLoaded {
+		soaLoad()
 	}
 
 	return &soaStruct

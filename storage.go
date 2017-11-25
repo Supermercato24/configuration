@@ -14,7 +14,9 @@ const (
 )
 
 var (
-	storageStruct storage
+	storageStruct   storage
+	storageErrEmpty = errors.New("empty Storage configuration")
+	storageLoaded   = false
 )
 
 type storage struct {
@@ -25,23 +27,28 @@ func (s storage) Token() string {
 	return s.token
 }
 
-func init() {
+func storageLoad() {
+	storageLoaded = true
+
 	buffer, err := cfg(filepath.Join(DirScriptConfig, storageFile), storageRegexp)
 
 	if err != nil {
-		return
+		panic(storageErrEmpty)
 	}
 
 	storageStruct = storage{
 		token: string(buffer["token"]),
 	}
+
+	if (storage{}) == storageStruct {
+		panic(storageErrEmpty)
+	}
 }
 
 // Expose Storage configuration.
 func StorageConfiguration() *storage {
-	if (storage{}) == storageStruct {
-		err := errors.New("empty Storage configuration")
-		panic(err)
+	if !storageLoaded {
+		storageLoad()
 	}
 
 	return &storageStruct

@@ -7,7 +7,6 @@
 package configuration
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -85,8 +84,6 @@ func cfg(filePath string, regexpString string) (object map[string][]byte, err er
 	if !isAbs && err == nil {
 		bytesContent, err = ioutil.ReadFile(filepath.Join(DirProject, filePath))
 	}
-
-	fmt.Println(filePath)
 
 	// relative path
 	if err != nil {

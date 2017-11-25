@@ -9,9 +9,9 @@ import (
 )
 
 const (
-	EnvLocal      = "local"
-	EnvStaging    = "staging"
-	EnvProduction = "production"
+	envLocal      = "local"
+	envStaging    = "staging"
+	envProduction = "production"
 	envFile       = ".env"
 	envRegexp     = `(?:APP_ENV=(?P<app_env>local|staging|production))|
 (?:DB_HOST=(?P<db_host>[\S]+))|
@@ -24,7 +24,9 @@ const (
 )
 
 var (
-	envStruct env
+	envStruct   env
+	envErrEmpty = errors.New("empty env configuration")
+	envLoaded   = false
 )
 
 type env struct {
@@ -38,15 +40,15 @@ func (e *env) setEnv(env string) {
 }
 
 func (e env) IsLocal() bool {
-	return e.env == EnvLocal
+	return e.env == envLocal
 }
 
 func (e env) IsStaging() bool {
-	return e.env == EnvStaging
+	return e.env == envStaging
 }
 
 func (e env) IsProduction() bool {
-	return e.env == EnvProduction
+	return e.env == envProduction
 }
 
 type credential struct {
@@ -77,11 +79,13 @@ func (m mail) IsEnabled() bool {
 	return m.enabled
 }
 
-func init() {
+func envLoad() {
+	envLoaded = true
+
 	buffer, err := cfg(envFile, envRegexp)
 
 	if err != nil {
-		return
+		panic(envErrEmpty)
 	}
 
 	envStruct = env{
@@ -102,13 +106,16 @@ func init() {
 			},
 		},
 	}
+
+	if (env{}) == envStruct {
+		panic(envErrEmpty)
+	}
 }
 
 // Expose env configuration.
 func EnvConfiguration() *env {
-	if (env{}) == envStruct {
-		err := errors.New("empty env configuration")
-		panic(err)
+	if !envLoaded {
+		envLoad()
 	}
 
 	return &envStruct

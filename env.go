@@ -5,7 +5,7 @@ package configuration
 
 import (
 	"errors"
-	"strings"
+	"strconv"
 )
 
 const (
@@ -20,7 +20,11 @@ const (
 (?:DB_PASSWORD=(?P<db_password>[\S]+))|
 (?:MAIL_USERNAME=(?P<mail_username>[\S]+))|
 (?:MAIL_PASSWORD=(?P<mail_password>[\S]+))|
-(?:MAIL_ENABLED=(?P<mail_enabled>true|false))`
+(?:MAIL_ENABLED=(?P<mail_enabled>true|false))|
+(?:RABBITMQ.HOST=(?P<rabbitmq_host>[\S]+))|
+(?:RABBITMQ.PORT=(?P<rabbitmq_port>[\d]+))|
+(?:RABBITMQ.USERNAME=(?P<rabbitmq_username>[\S]+))|
+(?:RABBITMQ.PASSWORD=(?P<rabbitmq_password>[\S]+))`
 )
 
 var (
@@ -32,6 +36,7 @@ var (
 type env struct {
 	env  string
 	Db   db
+	Rmq  rmq
 	Mail mail
 }
 
@@ -70,6 +75,12 @@ type db struct {
 	Credentials credential
 }
 
+type rmq struct {
+	Host        string
+	Port        uint64
+	Credentials credential
+}
+
 type mail struct {
 	enabled     bool
 	Credentials credential
@@ -99,13 +110,25 @@ func envLoad() {
 			},
 		},
 		Mail: mail{
-			enabled: strings.ToLower(string(buffer["mail_enabled"])) == "true",
 			Credentials: credential{
 				username: string(buffer["mail_username"]),
 				password: string(buffer["mail_password"]),
 			},
 		},
+		Rmq: rmq{
+			Host: string(buffer["rabbitmq_host"]),
+			Credentials: credential{
+				username: string(buffer["rabbitmq_username"]),
+				password: string(buffer["rabbitmq_password"]),
+			},
+		},
 	}
+
+	b, _ := strconv.ParseBool(string(buffer["mail_enabled"]))
+	envStruct.Mail.enabled = b
+
+	u, _ := strconv.ParseUint(string(buffer["rabbitmq_port"]), 10, 16)
+	envStruct.Rmq.Port = u
 
 	if (env{}) == envStruct {
 		panic(envErrEmpty)

@@ -98,8 +98,9 @@ func cfg(filePath string, regexpString string) (object map[string][]byte, err er
 	// compiled regex
 	re := regexp.MustCompile(regexpString)
 	names := re.SubexpNames()
-	subexpressions := re.NumSubexp()
+	//subexpressions := re.NumSubexp()
 	matches := re.FindAllSubmatch(bytesContent, -1)
+	subexpressions := len(matches)
 
 	// temporary dict of results
 	object = map[string][]byte{}

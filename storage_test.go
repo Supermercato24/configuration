@@ -12,7 +12,7 @@ func testStorageModel(t *testing.T, storage *storage) {
 }
 
 func TestStorage(t *testing.T) {
-	assert.NotPanics(t, func() { StorageConfiguration() })
+	assert.True(t, assert.NotPanics(t, func() { StorageConfiguration() }))
 
 	storage := StorageConfiguration()
 

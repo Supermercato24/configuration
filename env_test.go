@@ -30,7 +30,7 @@ func testEnvModel(t *testing.T, env *env) {
 }
 
 func TestEnv(t *testing.T) {
-	assert.NotPanics(t, func() { EnvConfiguration() })
+	assert.True(t, assert.NotPanics(t, func() { EnvConfiguration() }))
 
 	env := EnvConfiguration()
 

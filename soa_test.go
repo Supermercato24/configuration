@@ -50,7 +50,7 @@ func testSoaModel(t *testing.T, soa *soa) {
 }
 
 func TestSoa(t *testing.T) {
-	assert.NotPanics(t, func() { SoaConfiguration() })
+	assert.True(t, assert.NotPanics(t, func() { SoaConfiguration() }))
 
 	soa := SoaConfiguration()
 

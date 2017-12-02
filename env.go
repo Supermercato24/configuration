@@ -33,6 +33,8 @@ var (
 	envLoaded   = false
 )
 
+type Env = env
+
 type env struct {
 	env  string
 	Db   db

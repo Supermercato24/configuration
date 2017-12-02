@@ -5,7 +5,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"fmt"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -71,6 +70,11 @@ func TestConfigVariables(t *testing.T) {
 	assert.True(t, filepath.IsAbs(DirBinStorage))
 }
 
+func TestConfigVariablesRebuild(t *testing.T) {
+	BuildProject()
+	TestConfigVariables(t)
+}
+
 func TestConfigCfgWithMissingFile(t *testing.T) {
 	fileName := "foo"
 
@@ -84,7 +88,6 @@ func TestConfigCfgWithMissingFile(t *testing.T) {
 
 func TestConfigCfgWithWrongRegexp(t *testing.T) {
 	testPath := filepath.Join(DirCwd, "config_test.go")
-	fmt.Println(testPath)
 
 	fileInfo, err := os.Stat(testPath)
 
@@ -96,11 +99,11 @@ func TestConfigCfgWithWrongRegexp(t *testing.T) {
 	assert.True(t, mode.IsRegular())
 	assert.False(t, mode.IsDir())
 
-	assert.NotPanics(t, func() { cfg(testPath, "bar") })
+	assert.True(t, assert.NotPanics(t, func() { cfg(testPath, "bar") }))
 
 	object, err := cfg(testPath, "bar")
 	assert.Empty(t, object)
 	assert.NoError(t, err)
 
-	assert.Panics(t, func() { cfg(testPath, `(?P<foobar>[\d]+)`) })
+	assert.True(t, assert.NotPanics(t, func() { cfg(testPath, `(?P<foobar>[\d]+)`) }))
 }

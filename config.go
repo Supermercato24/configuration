@@ -56,8 +56,13 @@ func init() {
 
 	projectDir, _ := filepath.Abs(filepath.Join(cwd, relativeDir))
 
-	DirCwd = cwd                                                    // /
-	DirProject = projectDir                                         // gdo/
+	DirCwd = cwd            // /
+	DirProject = projectDir // gdo/
+	BuildProject()
+}
+
+// Build (or rebuild) dir structure
+func BuildProject() {
 	DirProjectApp = filepath.Join(DirProject, PathApp)              // gdo/app
 	DirProjectConfig = filepath.Join(DirProject, PathConfig)        // gdo/config
 	DirProjectStorage = filepath.Join(DirProject, PathStorage)      // gdo/storage
@@ -98,9 +103,11 @@ func cfg(filePath string, regexpString string) (object map[string][]byte, err er
 	// compiled regex
 	re := regexp.MustCompile(regexpString)
 	names := re.SubexpNames()
-	//subexpressions := re.NumSubexp()
+	subexpressions := re.NumSubexp()
 	matches := re.FindAllSubmatch(bytesContent, -1)
-	subexpressions := len(matches)
+	if matchesLen := len(matches); matchesLen < subexpressions {
+		subexpressions = matchesLen
+	}
 
 	// temporary dict of results
 	object = map[string][]byte{}

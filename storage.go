@@ -6,6 +6,7 @@ package configuration
 import (
 	"errors"
 	"path/filepath"
+	"sync"
 )
 
 const (
@@ -16,7 +17,7 @@ const (
 var (
 	storageStruct   storage
 	storageErrEmpty = errors.New("empty Storage configuration")
-	storageLoaded   = false
+	storageOnce     sync.Once
 )
 
 type storage struct {
@@ -28,8 +29,6 @@ func (s storage) Token() string {
 }
 
 func storageLoad() {
-	storageLoaded = true
-
 	buffer, err := cfg(filepath.Join(DirScriptConfig, storageFile), storageRegexp)
 
 	if err != nil {
@@ -47,9 +46,9 @@ func storageLoad() {
 
 // Expose Storage configuration.
 func StorageConfiguration() *storage {
-	if !storageLoaded {
+	storageOnce.Do(func() {
 		storageLoad()
-	}
+	})
 
 	return &storageStruct
 }

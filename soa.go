@@ -6,6 +6,7 @@ package configuration
 import (
 	"errors"
 	"path/filepath"
+	"sync"
 )
 
 const (
@@ -22,7 +23,7 @@ const (
 var (
 	soaStruct   soa
 	soaErrEmpty = errors.New("empty Soa configuration")
-	soaLoaded   = false
+	soaOnce     sync.Once
 )
 
 type soa struct {
@@ -54,8 +55,6 @@ func (s service) IsHttp() bool {
 }
 
 func soaLoad() {
-	soaLoaded = true
-
 	buffer, err := cfg(filepath.Join(DirProjectConfig, soaFile), soaRegexp)
 
 	if err != nil {
@@ -85,9 +84,9 @@ func soaLoad() {
 
 // Expose Soa configuration.
 func SoaConfiguration() *soa {
-	if !soaLoaded {
+	soaOnce.Do(func() {
 		soaLoad()
-	}
+	})
 
 	return &soaStruct
 }

@@ -6,6 +6,7 @@ package configuration
 import (
 	"errors"
 	"strconv"
+	"sync"
 )
 
 const (
@@ -30,7 +31,7 @@ const (
 var (
 	envStruct   env
 	envErrEmpty = errors.New("empty env configuration")
-	envLoaded   = false
+	envOnce     sync.Once
 )
 
 type Env = env
@@ -93,8 +94,6 @@ func (m mail) IsEnabled() bool {
 }
 
 func envLoad() {
-	envLoaded = true
-
 	buffer, err := cfg(envFile, envRegexp)
 
 	if err != nil {
@@ -139,9 +138,9 @@ func envLoad() {
 
 // Expose env configuration.
 func EnvConfiguration() *env {
-	if !envLoaded {
+	envOnce.Do(func() {
 		envLoad()
-	}
+	})
 
 	return &envStruct
 }

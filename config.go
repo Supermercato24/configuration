@@ -70,7 +70,7 @@ func BuildProject() {
 	DirScriptApp = filepath.Join(DirScript, PathApp)                // gdo/script/app
 	DirScriptConfig = filepath.Join(DirScriptApp, PathConfig)       // gdo/script/app/config
 	DirScriptStorage = filepath.Join(DirScript, PathStorage)        // gdo/script/storage
-	DirBinStorage = filepath.Join(DirProject, PathBin, PathStorage) // gdo/script/storage
+	DirBinStorage = filepath.Join(DirProject, PathBin, PathStorage) // compiled/script/storage
 }
 
 // Read a file, from a path and extract configuration from regexp.

@@ -34,7 +34,7 @@ var (
 	onceEnv     sync.Once
 )
 
-// Alias to export env to outer space.
+// Env is an alias to export env to outer space.
 type Env = env
 
 type env struct {

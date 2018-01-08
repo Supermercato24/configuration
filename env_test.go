@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/supermercato24/configuration/file"
 )
 
 var (
@@ -51,11 +50,13 @@ func EnvModel(t *testing.T, env *env) {
 }
 
 func EnvMockup(t *testing.T) {
-	_, err := file.Exist(envFile)
+	fd, err := os.Open(envFile)
 	if err != nil {
 		fd, err := os.Create(envFile)
 		assert.NoError(t, err)
 		fd.Write(envMockup)
+		assert.NoError(t, fd.Close())
+	} else {
 		assert.NoError(t, fd.Close())
 	}
 }

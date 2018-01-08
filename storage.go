@@ -1,4 +1,4 @@
-// Package config implements methods for get storage variables.
+// Package configuration implements methods for get storage variables.
 //
 // script/app/config/storage file.
 package configuration
@@ -15,9 +15,9 @@ const (
 )
 
 var (
-	storageStruct   storage
-	storageErrEmpty = errors.New("empty Storage configuration")
-	storageOnce     sync.Once
+	structStorage   storage
+	errEmptyStorage = errors.New("empty Storage configuration")
+	onceStorage     sync.Once
 )
 
 type storage struct {
@@ -32,23 +32,23 @@ func storageLoad() {
 	buffer, err := cfg(filepath.Join(DirScriptConfig, storageFile), storageRegexp)
 
 	if err != nil {
-		panic(storageErrEmpty)
+		panic(errEmptyStorage)
 	}
 
-	storageStruct = storage{
+	structStorage = storage{
 		token: string(buffer["token"]),
 	}
 
-	if (storage{}) == storageStruct {
-		panic(storageErrEmpty)
+	if (storage{}) == structStorage {
+		panic(errEmptyStorage)
 	}
 }
 
-// Expose Storage configuration.
+// StorageConfiguration expose STORAGE configuration data.
 func StorageConfiguration() *storage {
-	storageOnce.Do(func() {
+	onceStorage.Do(func() {
 		storageLoad()
 	})
 
-	return &storageStruct
+	return &structStorage
 }

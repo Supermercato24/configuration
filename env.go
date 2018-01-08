@@ -1,4 +1,4 @@
-// Package config implements methods for get config variables.
+// Package configuration implements methods for get config variables.
 //
 // env file.
 package configuration
@@ -29,11 +29,12 @@ const (
 )
 
 var (
-	envStruct   env
-	envErrEmpty = errors.New("empty env configuration")
-	envOnce     sync.Once
+	structEnv   env
+	errEmptyEnv = errors.New("empty env configuration")
+	onceEnv     sync.Once
 )
 
+// Alias to export env to outer space.
 type Env = env
 
 type env struct {
@@ -97,10 +98,10 @@ func envLoad() {
 	buffer, err := cfg(envFile, envRegexp)
 
 	if err != nil {
-		panic(envErrEmpty)
+		panic(errEmptyEnv)
 	}
 
-	envStruct = env{
+	structEnv = env{
 		env: string(buffer["app_env"]),
 		Db: db{
 			Host:     string(buffer["db_host"]),
@@ -126,21 +127,21 @@ func envLoad() {
 	}
 
 	b, _ := strconv.ParseBool(string(buffer["mail_enabled"]))
-	envStruct.Mail.enabled = b
+	structEnv.Mail.enabled = b
 
 	u, _ := strconv.ParseUint(string(buffer["rabbitmq_port"]), 10, 16)
-	envStruct.Rmq.Port = u
+	structEnv.Rmq.Port = u
 
-	if (env{}) == envStruct {
-		panic(envErrEmpty)
+	if (env{}) == structEnv {
+		panic(errEmptyEnv)
 	}
 }
 
-// Expose env configuration.
+// EnvConfiguration expose ENV configuration data.
 func EnvConfiguration() *env {
-	envOnce.Do(func() {
+	onceEnv.Do(func() {
 		envLoad()
 	})
 
-	return &envStruct
+	return &structEnv
 }

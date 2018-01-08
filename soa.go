@@ -1,4 +1,4 @@
-// Package config implements methods for get config variables.
+// Package configuration implements methods for get config variables.
 //
 // config/soa file.
 package configuration
@@ -21,9 +21,9 @@ const (
 )
 
 var (
-	soaStruct   soa
-	soaErrEmpty = errors.New("empty Soa configuration")
-	soaOnce     sync.Once
+	structSoa   soa
+	errEmptySoa = errors.New("empty Soa configuration")
+	onceSoa     sync.Once
 )
 
 type soa struct {
@@ -58,10 +58,10 @@ func soaLoad() {
 	buffer, err := cfg(filepath.Join(DirProjectConfig, soaFile), soaRegexp)
 
 	if err != nil {
-		panic(soaErrEmpty)
+		panic(errEmptySoa)
 	}
 
-	soaStruct = soa{
+	structSoa = soa{
 		ua: string(buffer["ua"]),
 		Cp24: service{
 			domain: string(buffer["cp24"]),
@@ -77,16 +77,16 @@ func soaLoad() {
 		},
 	}
 
-	if (soa{}) == soaStruct {
-		panic(soaErrEmpty)
+	if (soa{}) == structSoa {
+		panic(errEmptySoa)
 	}
 }
 
-// Expose Soa configuration.
+// SoaConfiguration expose SOA configuration data.
 func SoaConfiguration() *soa {
-	soaOnce.Do(func() {
+	onceSoa.Do(func() {
 		soaLoad()
 	})
 
-	return &soaStruct
+	return &structSoa
 }

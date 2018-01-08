@@ -7,16 +7,16 @@ import (
 )
 
 var (
-	fileErrLocal = errors.New("localPath is not a file")
+	errLocalFile = errors.New("localPath is not a file")
 )
 
-// Check is path exist.
+// Exist check if path exist.
 func Exist(filePath string) (fileInfo os.FileInfo, err error) {
 	fileInfo, err = os.Stat(filePath)
 	return
 }
 
-// Check is path exist and is a file.
+// IsFile check if path exist and is a file.
 func IsFile(filePath string) (exist bool, fileInfo os.FileInfo, err error) {
 	fileInfo, err = Exist(filePath)
 
@@ -29,7 +29,7 @@ func IsFile(filePath string) (exist bool, fileInfo os.FileInfo, err error) {
 	return
 }
 
-// Check is path exist and is a directory.
+// IsDirectory check if path exist and is a directory.
 func IsDirectory(filePath string) (exist bool, fileInfo os.FileInfo, err error) {
 	fileInfo, err = Exist(filePath)
 
@@ -42,7 +42,7 @@ func IsDirectory(filePath string) (exist bool, fileInfo os.FileInfo, err error) 
 	return
 }
 
-// Get fileDescriptor of a file without closing it.
+// GetFileDescriptor of a file without closing it.
 func GetFileDescriptor(localPath string) (fd *os.File, fileInfo os.FileInfo, err error) {
 	// fileInfo check is file and exists
 	exist, fileInfo, err := IsFile(localPath)
@@ -50,7 +50,7 @@ func GetFileDescriptor(localPath string) (fd *os.File, fileInfo os.FileInfo, err
 	if err != nil {
 		// pass
 	} else if !exist {
-		err = fileErrLocal
+		err = errLocalFile
 	} else {
 		fd, err = os.Open(localPath)
 	}

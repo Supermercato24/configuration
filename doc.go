@@ -1,4 +1,4 @@
-// Package config implements methods for get config variables.
+// Package configuration implements methods for get config variables.
 //
 // configuration contains the following packages:
 //

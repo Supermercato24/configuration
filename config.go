@@ -1,4 +1,4 @@
-// Package config implements methods for get config variables.
+// Package configuration implements methods for get config variables.
 //
 // Config main project.
 // jenkins/gdo/compiled = go main.
@@ -61,7 +61,7 @@ func init() {
 	BuildProject()
 }
 
-// Build (or rebuild) dir structure
+// BuildProject (or rebuild) dir structure
 func BuildProject() {
 	DirProjectApp = filepath.Join(DirProject, PathApp)              // gdo/app
 	DirProjectConfig = filepath.Join(DirProject, PathConfig)        // gdo/config

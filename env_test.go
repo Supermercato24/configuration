@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"supermercato24.it/configuration/file"
+	"github.com/supermercato24/configuration/file"
 )
 
 var (

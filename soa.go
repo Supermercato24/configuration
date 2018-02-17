@@ -33,6 +33,7 @@ type soa struct {
 	Sm   service
 }
 
+// UA expose UserAgent
 func (s soa) UA() string {
 	return s.ua
 }
@@ -42,16 +43,24 @@ type service struct {
 	token  string
 }
 
+// Domain of soa connection
 func (s service) Domain() string {
 	return s.domain
 }
 
+// Token of soa connection
 func (s service) Token() string {
 	return s.token
 }
 
+// IsHttp if soa connection is HTTP
 func (s service) IsHttp() bool {
 	return s.domain[0:5] == "http:"
+}
+
+// IsHttps if soa connection is HTTPS
+func (s service) IsHttps() bool {
+	return s.domain[0:6] == "https:"
 }
 
 func soaLoad() {

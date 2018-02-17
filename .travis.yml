@@ -1,8 +1,10 @@
 sudo: false
 language: go
-python:
+go:
   - "1.9"
+  - "1.10"
   - "tip"
+go_import_path: github.com/supermercato24/configuration
 script:
   - go test -race -v ./...
 notifications:

@@ -15,27 +15,61 @@ import (
 )
 
 const (
-	PathBin     = "compiled" // go code
-	PathScript  = "script"   // python code
-	PathFile    = "file"     // file          for python and php code
-	PathLib     = "lib"      // lib           for python and php code
-	PathApp     = "app"      // app           for python and php code
-	PathConfig  = "config"   // configuration for python and php code
-	PathStorage = "storage"  // storage       for python and php code
-	PathLogs    = "logs"     // log           for python and php code
+	// PathBin expose compiled dir
+	PathBin = "compiled"
+
+	// PathScript expose script dir
+	PathScript = "script"
+
+	// PathFile expose file dir
+	PathFile = "file"
+
+	// PathLib expose lib dir
+	PathLib = "lib"
+
+	// PathApp expose app dir
+	PathApp = "app"
+
+	// PathConfig expose config dir
+	PathConfig = "config"
+
+	// PathStorage expose storage dir
+	PathStorage = "storage"
+
+	// PathLogs expose logs dir
+	PathLogs = "logs"
 )
 
 var (
-	DirCwd            string // current working dir
-	DirProject        string // php framework
-	DirProjectApp     string // php app dir
-	DirProjectConfig  string // php config dir
-	DirProjectStorage string // php storage dir
-	DirScript         string // python framework
-	DirScriptApp      string // python app dir
-	DirScriptConfig   string // python config dir
-	DirScriptStorage  string // python storage dir
-	DirBinStorage     string // go storage dir
+	// DirCwd current working dir
+	DirCwd string
+
+	// DirProject - php framework
+	DirProject string
+
+	// DirProjectApp - php app dir
+	DirProjectApp string
+
+	// DirProjectConfig - php config dir
+	DirProjectConfig string
+
+	// DirProjectStorage - php storage dir
+	DirProjectStorage string
+
+	// DirScript - python framework
+	DirScript string
+
+	// DirScriptApp - python app dir
+	DirScriptApp string
+
+	// DirScriptConfig -python config dir
+	DirScriptConfig string
+
+	// DirScriptStorage -python storage dir
+	DirScriptStorage string
+
+	// DirBinStorage - go storage dir
+	DirBinStorage string
 )
 
 func init() {
@@ -63,14 +97,29 @@ func init() {
 
 // BuildProject (or rebuild) dir structure
 func BuildProject() {
-	DirProjectApp = filepath.Join(DirProject, PathApp)              // gdo/app
-	DirProjectConfig = filepath.Join(DirProject, PathConfig)        // gdo/config
-	DirProjectStorage = filepath.Join(DirProject, PathStorage)      // gdo/storage
-	DirScript = filepath.Join(DirProject, PathScript)               // gdo/script
-	DirScriptApp = filepath.Join(DirScript, PathApp)                // gdo/script/app
-	DirScriptConfig = filepath.Join(DirScriptApp, PathConfig)       // gdo/script/app/config
-	DirScriptStorage = filepath.Join(DirScript, PathStorage)        // gdo/script/storage
-	DirBinStorage = filepath.Join(DirProject, PathBin, PathStorage) // compiled/script/storage
+	// DirProjectApp - gdo/app
+	DirProjectApp = filepath.Join(DirProject, PathApp)
+
+	// DirProjectConfig - gdo/config
+	DirProjectConfig = filepath.Join(DirProject, PathConfig)
+
+	// DirProjectStorage - gdo/storage
+	DirProjectStorage = filepath.Join(DirProject, PathStorage)
+
+	// DirScript - gdo/script
+	DirScript = filepath.Join(DirProject, PathScript)
+
+	// DirScriptApp - gdo/script/app
+	DirScriptApp = filepath.Join(DirScript, PathApp)
+
+	// DirScriptConfig - gdo/script/app/config
+	DirScriptConfig = filepath.Join(DirScriptApp, PathConfig)
+
+	// DirScriptStorage - gdo/script/storage
+	DirScriptStorage = filepath.Join(DirScript, PathStorage)
+
+	// DirBinStorage - compiled/script/storage
+	DirBinStorage = filepath.Join(DirProject, PathBin, PathStorage)
 }
 
 // Read a file, from a path and extract configuration from regexp.
@@ -114,13 +163,13 @@ func cfg(filePath string, regexpString string) (object map[string][]byte, err er
 	for i, key := 0, 1; i < subexpressions; i, key = i+1, key+1 {
 		match := matches[i]
 		name := names[key]
-		//for key, match := range matches[i] {
+		// for key, match := range matches[i] {
 
-		//if len(match) > 0 && len(name) > 0 {
+		// if len(match) > 0 && len(name) > 0 {
 		object[name] = match[key]
-		//}
+		// }
 
-		//}
+		// }
 	}
 
 	return

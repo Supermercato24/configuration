@@ -24,6 +24,7 @@ type storage struct {
 	token string
 }
 
+// Token of storage provider
 func (s storage) Token() string {
 	return s.token
 }

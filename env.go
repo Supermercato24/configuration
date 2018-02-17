@@ -48,14 +48,17 @@ func (e *env) setEnv(env string) {
 	e.env = env
 }
 
+// IsLocal check if environment is production
 func (e env) IsLocal() bool {
 	return e.env == envLocal
 }
 
+// IsStaging check if environment is production
 func (e env) IsStaging() bool {
 	return e.env == envStaging
 }
 
+// IsProduction check if environment is production
 func (e env) IsProduction() bool {
 	return e.env == envProduction
 }
@@ -65,10 +68,12 @@ type credential struct {
 	password string
 }
 
+// Username expose credential username
 func (c credential) Username() string {
 	return c.username
 }
 
+// Password expose credential password
 func (c credential) Password() string {
 	return c.password
 }
@@ -90,6 +95,7 @@ type mail struct {
 	Credentials credential
 }
 
+// IsEnabled check if email is enabled or not
 func (m mail) IsEnabled() bool {
 	return m.enabled
 }
